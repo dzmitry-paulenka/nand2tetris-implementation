@@ -1,0 +1,8 @@
+CHIP And4 {
+    IN a, b, c, d;
+    OUT out;
+
+    PARTS:
+    And3(a=a,b=b,c=c,out=o1);
+    And(a=d,b=o1,out=out);
+}

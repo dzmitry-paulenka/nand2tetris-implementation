@@ -1,0 +1,60 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/05/Memory.hdl
+
+/**
+ * The complete address space of the computer's memory,
+ * including RAM and memory mapped I/O. 
+ * The chip facilitates read and write operations, as follows:
+ *     Read:  out(t) = Memory[address(t)](t)
+ *     Write: If load(t-1) then Memory[address(t-1)](t) = in(t-1)
+ * In words: the chip always outputs the value stored at the memory 
+ * location specified by address. If load=1, the in value is loaded 
+ * into the memory location specified by address. This value becomes 
+ * available through the out output in the next time step.
+ * Address space rules:
+ * Only the upper 16K+8K+1 words of the Memory chip are used. 
+ * Access to address>0x6000 is invalid. Access to any address in 
+ * the range 0x4000-0x5FFF results in accessing the screen memory 
+ * map. Access to address 0x6000 results in accessing the keyboard 
+ * memory map. The behavior in these addresses is described in the 
+ * Screen and Keyboard chip specifications given in the book.
+ */
+
+CHIP Memory {
+    IN in[16], load, address[15];
+    OUT out[16];
+
+    PARTS:
+
+    Not(in=address[13], out=nota1);
+
+    //memsel/load
+    Not(in=address[14], out=memsel);
+    And(a=memsel,b=load,out=memload);
+
+    //scrsel/load
+    And(a=address[14],b=nota1,out=scrsel);
+    And(a=scrsel,b=load,out=scrload);
+
+    //kbdsel
+    Or8Way(in=address[0..7],out=o1);
+    Or8Way(in=address[5..12],out=o2);
+    Or(a=o1, b=o2, out=o12);
+    Not(in=o12, out=noto12);
+
+    And(a=address[14], b=address[13], out=a01);
+    And(a=a01, b=noto12, out=kbdsel);
+
+    //Wiring
+
+    RAM16K(in=in, load=memload, address=address[0..13], out=memout);
+    Screen(in=in, load=scrload, address=address[0..12], out=scrout);
+
+    Keyboard(out=kbdout);
+
+    Mux16(a=false, b=kbdout, sel=kbdsel, out=out1);
+    Mux16(a=out1, b=scrout, sel=scrsel, out=out2);
+    Mux16(a=out2, b=memout, sel=memsel, out=out);
+}
