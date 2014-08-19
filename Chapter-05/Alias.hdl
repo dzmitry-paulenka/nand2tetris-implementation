@@ -1,0 +1,8 @@
+CHIP Alias {
+    IN in;
+    OUT out;
+
+    PARTS:
+    Not(in=in, out=out1);
+    Not(in=out1, out=out);
+}

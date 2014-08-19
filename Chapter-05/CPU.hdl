@@ -39,5 +39,70 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
-    // Put your code here:
+
+    DMux(in=true, sel=instruction[15], a=ainst, b=cinst);
+
+    Alias(in=instruction[12], out=useMemAsY);
+    Alias(in=instruction[5], out=destA);
+    Alias(in=instruction[4], out=destD);
+    Alias(in=instruction[3], out=destM);
+
+    And(b=cinst, a=destD, out=setD);
+    And(b=cinst, a=destM, out=writeM);
+
+    //computing jump condition: j1=instr[2], j2=instr[1], j3=instr[0]
+    Not(in=aluZero, out=alulNotZero);
+    Not(in=aluNeg, out=alulNotNeg);
+
+    And(a=instruction[2], b=aluNeg, out=jmpLt);
+    And(a=instruction[1], b=aluZero, out=jmpEq);
+    And3(a=instruction[0], b=alulNotZero, c=alulNotNeg, out=jmpGt);
+
+    Or3(a=jmpLt, b=jmpEq, c=jmpGt, out=jmpAll);
+
+    And(a=jmpAll, b=cinst, out=shouldJump);
+
+    //ARegister setup
+    Or(a=destA, b=ainst, out=setA);
+    Mux16(a=aluOut, b=instruction, sel=ainst, out=aIn);
+    ARegister(
+        in=aIn,
+        load=setA,
+        out[0..14]=addressM,
+        out=aOut
+        );
+
+    //DRegister setup
+    DRegister(
+        in=aluOut,
+        load=setD,
+        out=aluX
+        );
+
+    //Counter setup
+    PC(
+        in=aOut,
+        load=shouldJump,
+        inc=true,
+        reset=reset,
+        out[0..14]=pc);
+
+    //ALU setup
+    Mux16(a=aOut, b=inM, sel=useMemAsY, out=aluY);
+
+    ALU(
+        x=aluX,
+        y=aluY,
+        zx=instruction[11],
+        nx=instruction[10],
+        zy=instruction[9],
+        ny=instruction[8],
+        f=instruction[7],
+        no=instruction[6],
+
+        out=aluOut,
+        out=outM,
+        zr=aluZero,
+        ng=aluNeg
+    );
 }
