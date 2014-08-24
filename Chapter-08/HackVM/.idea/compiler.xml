@@ -25,6 +25,9 @@
         <module name="hack-vm" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="hack-vm" target="1.7" />
+    </bytecodeTargetLevel>
   </component>
 </project>
 

@@ -1,5 +1,4 @@
-//initialization sequence
-
+//initialization section
         //init stack
     @261 // = 256 + 5
     D=A
@@ -9,31 +8,152 @@
     @Sys.init
     0;JMP
         //ending infinite loop
-(GENERATED_INTERNAL_SYMBOL$$0)
-    @GENERATED_INTERNAL_SYMBOL$$0
+(::Internals::endingLoop)
+    @::Internals::endingLoop
     0;JMP
+
+
+(::Internals::callSeqence)
+// return address is in R13,
+// argcount+5 is in R14 and
+// function address is in D
+        //push ret-addr
+    @SP
+    M=M+1
+    A=M-1
+    M=D
+        //push LCL
+    @LCL
+    D=M
+    @SP
+    M=M+1
+    A=M-1
+    M=D
+        //push ARG
+    @ARG
+    D=M
+    @SP
+    M=M+1
+    A=M-1
+    M=D
+        //push THIS
+    @THIS
+    D=M
+    @SP
+    M=M+1
+    A=M-1
+    M=D
+        //push THAT
+    @THAT
+    D=M
+    @SP
+    M=M+1
+    A=M-1
+    M=D
+        //reposition ARG = SP - args - 5
+    @SP
+    D=M
+    @R14
+    D=D-M
+    @ARG
+    M=D
+        //LCL = SP
+    @SP
+    D=M
+    @LCL
+    M=D
+        //goto function, which address is in R14
+    @R13
+    A=M
+    0;JMP
+
+
+(::Internals::returnSeqence)
+        //save ret-addr to R13
+    @5
+    D=A
+    @LCL
+    A=M-D
+    D=M
+    @R13
+    M=D
+        //save ret value to M[ARG]
+    @SP
+    A=M-1
+    D=M
+    @ARG
+    A=M
+    M=D
+        //move stack top
+    @ARG
+    D=M
+    @SP
+    M=D+1
+        //restore THAT
+    @LCL
+    AM=M-1
+    D=M
+
+    @THAT
+    M=D
+        //restore THIS
+    @LCL
+    AM=M-1
+    D=M
+    @THIS
+    M=D
+        //restore ARG
+    @LCL
+    AM=M-1
+    D=M
+    @ARG
+    M=D
+        //restore LCL
+    @LCL
+    AM=M-1
+    D=M
+    @LCL
+    M=D
+        //jmp to ret-addr
+    @R13
+    A=M
+    0;JMP
+
+
+(::Internals::InitFunction)
+//start function address is in R13
+//localCount is in D
+
+    (::Internals::InitFunction.LOOP)
+        @::Internals::InitFunction.END
+        D;JEQ
+
+        @SP
+        M=M+1
+        A=M-1
+        M=0
+        D=D-1
+
+        @::Internals::InitFunction.LOOP
+        0;JMP
+    (::Internals::InitFunction.END)
+        @R13
+        A=M
+        0;JMP
 
 //function Class1.set 0
 
 (Class1.set)
-
+    @GENERATED_INTERNAL_SYMBOL$$0
+    D=A
+    @R13
+    M=D
     @0
     D=A
 
-(GENERATED_INTERNAL_SYMBOL$$1)
-    @GENERATED_INTERNAL_SYMBOL$$2
-    D;JEQ
-
-    @SP
-    M=M+1
-    A=M-1
-    M=0
-    D=D-1
-
-    @GENERATED_INTERNAL_SYMBOL$$1
+    @::Internals::InitFunction
     0;JMP
-
-(GENERATED_INTERNAL_SYMBOL$$2)
+(GENERATED_INTERNAL_SYMBOL$$0)
 
 //push ARG 0:
     @0
@@ -86,78 +206,22 @@
     
 
 //return
-
-        //save ret-addr to R13
-    @5
-    D=A
-    @LCL
-    A=M-D
-    D=M
-    @R13
-    M=D
-        //save ret value to M[ARG]
-    @SP
-    A=M-1
-    D=M
-    @ARG
-    A=M
-    M=D
-        //move stack top
-    @ARG
-    D=M
-    @SP
-    M=D+1
-        //restore THAT
-    @LCL
-    AM=M-1
-    D=M
-
-    @THAT
-    M=D
-        //restore THIS
-    @LCL
-    AM=M-1
-    D=M
-    @THIS
-    M=D
-        //restore ARG
-    @LCL
-    AM=M-1
-    D=M
-    @ARG
-    M=D
-        //restore LCL
-    @LCL
-    AM=M-1
-    D=M
-    @LCL
-    M=D
-        //jmp to ret-addr
-    @R13
-    A=M
+    @::Internals::returnSeqence
     0;JMP
 
 //function Class1.get 0
 
 (Class1.get)
-
+    @GENERATED_INTERNAL_SYMBOL$$1
+    D=A
+    @R13
+    M=D
     @0
     D=A
 
-(GENERATED_INTERNAL_SYMBOL$$3)
-    @GENERATED_INTERNAL_SYMBOL$$4
-    D;JEQ
-
-    @SP
-    M=M+1
-    A=M-1
-    M=0
-    D=D-1
-
-    @GENERATED_INTERNAL_SYMBOL$$3
+    @::Internals::InitFunction
     0;JMP
-
-(GENERATED_INTERNAL_SYMBOL$$4)
+(GENERATED_INTERNAL_SYMBOL$$1)
 
 //push static Class1.0:
 
@@ -187,78 +251,22 @@
     M=M-D  //-, & |
 
 //return
-
-        //save ret-addr to R13
-    @5
-    D=A
-    @LCL
-    A=M-D
-    D=M
-    @R13
-    M=D
-        //save ret value to M[ARG]
-    @SP
-    A=M-1
-    D=M
-    @ARG
-    A=M
-    M=D
-        //move stack top
-    @ARG
-    D=M
-    @SP
-    M=D+1
-        //restore THAT
-    @LCL
-    AM=M-1
-    D=M
-
-    @THAT
-    M=D
-        //restore THIS
-    @LCL
-    AM=M-1
-    D=M
-    @THIS
-    M=D
-        //restore ARG
-    @LCL
-    AM=M-1
-    D=M
-    @ARG
-    M=D
-        //restore LCL
-    @LCL
-    AM=M-1
-    D=M
-    @LCL
-    M=D
-        //jmp to ret-addr
-    @R13
-    A=M
+    @::Internals::returnSeqence
     0;JMP
 
 //function Class2.set 0
 
 (Class2.set)
-
+    @GENERATED_INTERNAL_SYMBOL$$2
+    D=A
+    @R13
+    M=D
     @0
     D=A
 
-(GENERATED_INTERNAL_SYMBOL$$5)
-    @GENERATED_INTERNAL_SYMBOL$$6
-    D;JEQ
-
-    @SP
-    M=M+1
-    A=M-1
-    M=0
-    D=D-1
-
-    @GENERATED_INTERNAL_SYMBOL$$5
+    @::Internals::InitFunction
     0;JMP
-
-(GENERATED_INTERNAL_SYMBOL$$6)
+(GENERATED_INTERNAL_SYMBOL$$2)
 
 //push ARG 0:
     @0
@@ -311,78 +319,22 @@
     
 
 //return
-
-        //save ret-addr to R13
-    @5
-    D=A
-    @LCL
-    A=M-D
-    D=M
-    @R13
-    M=D
-        //save ret value to M[ARG]
-    @SP
-    A=M-1
-    D=M
-    @ARG
-    A=M
-    M=D
-        //move stack top
-    @ARG
-    D=M
-    @SP
-    M=D+1
-        //restore THAT
-    @LCL
-    AM=M-1
-    D=M
-
-    @THAT
-    M=D
-        //restore THIS
-    @LCL
-    AM=M-1
-    D=M
-    @THIS
-    M=D
-        //restore ARG
-    @LCL
-    AM=M-1
-    D=M
-    @ARG
-    M=D
-        //restore LCL
-    @LCL
-    AM=M-1
-    D=M
-    @LCL
-    M=D
-        //jmp to ret-addr
-    @R13
-    A=M
+    @::Internals::returnSeqence
     0;JMP
 
 //function Class2.get 0
 
 (Class2.get)
-
+    @GENERATED_INTERNAL_SYMBOL$$3
+    D=A
+    @R13
+    M=D
     @0
     D=A
 
-(GENERATED_INTERNAL_SYMBOL$$7)
-    @GENERATED_INTERNAL_SYMBOL$$8
-    D;JEQ
-
-    @SP
-    M=M+1
-    A=M-1
-    M=0
-    D=D-1
-
-    @GENERATED_INTERNAL_SYMBOL$$7
+    @::Internals::InitFunction
     0;JMP
-
-(GENERATED_INTERNAL_SYMBOL$$8)
+(GENERATED_INTERNAL_SYMBOL$$3)
 
 //push static Class2.0:
 
@@ -412,78 +364,22 @@
     M=M-D  //-, & |
 
 //return
-
-        //save ret-addr to R13
-    @5
-    D=A
-    @LCL
-    A=M-D
-    D=M
-    @R13
-    M=D
-        //save ret value to M[ARG]
-    @SP
-    A=M-1
-    D=M
-    @ARG
-    A=M
-    M=D
-        //move stack top
-    @ARG
-    D=M
-    @SP
-    M=D+1
-        //restore THAT
-    @LCL
-    AM=M-1
-    D=M
-
-    @THAT
-    M=D
-        //restore THIS
-    @LCL
-    AM=M-1
-    D=M
-    @THIS
-    M=D
-        //restore ARG
-    @LCL
-    AM=M-1
-    D=M
-    @ARG
-    M=D
-        //restore LCL
-    @LCL
-    AM=M-1
-    D=M
-    @LCL
-    M=D
-        //jmp to ret-addr
-    @R13
-    A=M
+    @::Internals::returnSeqence
     0;JMP
 
 //function Sys.init 0
 
 (Sys.init)
-
+    @GENERATED_INTERNAL_SYMBOL$$4
+    D=A
+    @R13
+    M=D
     @0
     D=A
 
-(GENERATED_INTERNAL_SYMBOL$$9)
-    @GENERATED_INTERNAL_SYMBOL$$10
-    D;JEQ
-
-    @SP
-    M=M+1
-    A=M-1
-    M=0
-    D=D-1
-
-    @GENERATED_INTERNAL_SYMBOL$$9
+    @::Internals::InitFunction
     0;JMP
-
-(GENERATED_INTERNAL_SYMBOL$$10)
+(GENERATED_INTERNAL_SYMBOL$$4)
 
 //push const 6:
 
@@ -507,57 +403,23 @@
 
 // call Class1.set 7
 
-        //push ret-addr
-    @GENERATED_INTERNAL_SYMBOL$$11
-    D=A
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push LCL
-    @LCL
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push ARG
-    @ARG
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push THIS
-    @THIS
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push THAT
-    @THAT
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //reposition ARG = SP - args - 5
-    @SP
-    D=M
-    @7
-    D=D-A
-    @ARG
-    M=D
-        //LCL = SP
-    @SP
-    D=M
-    @LCL
-    M=D
-        //goto Class1.set
+        //save function address in R13
     @Class1.set
+    D=A
+    @R13
+    M=D
+        //save args+5 in R14
+    @7
+    D=A
+    @R14
+    M=D
+        //save ret-address in D
+    @GENERATED_INTERNAL_SYMBOL$$5
+    D=A
+        //prepare the call
+    @::Internals::callSeqence
     0;JMP
-(GENERATED_INTERNAL_SYMBOL$$11)
+(GENERATED_INTERNAL_SYMBOL$$5)
 
 //pop temp R5:
 
@@ -590,57 +452,23 @@
 
 // call Class2.set 7
 
-        //push ret-addr
-    @GENERATED_INTERNAL_SYMBOL$$12
-    D=A
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push LCL
-    @LCL
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push ARG
-    @ARG
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push THIS
-    @THIS
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push THAT
-    @THAT
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //reposition ARG = SP - args - 5
-    @SP
-    D=M
-    @7
-    D=D-A
-    @ARG
-    M=D
-        //LCL = SP
-    @SP
-    D=M
-    @LCL
-    M=D
-        //goto Class2.set
+        //save function address in R13
     @Class2.set
+    D=A
+    @R13
+    M=D
+        //save args+5 in R14
+    @7
+    D=A
+    @R14
+    M=D
+        //save ret-address in D
+    @GENERATED_INTERNAL_SYMBOL$$6
+    D=A
+        //prepare the call
+    @::Internals::callSeqence
     0;JMP
-(GENERATED_INTERNAL_SYMBOL$$12)
+(GENERATED_INTERNAL_SYMBOL$$6)
 
 //pop temp R5:
 
@@ -653,111 +481,43 @@
 
 // call Class1.get 5
 
-        //push ret-addr
-    @GENERATED_INTERNAL_SYMBOL$$13
-    D=A
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push LCL
-    @LCL
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push ARG
-    @ARG
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push THIS
-    @THIS
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push THAT
-    @THAT
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //reposition ARG = SP - args - 5
-    @SP
-    D=M
-    @5
-    D=D-A
-    @ARG
-    M=D
-        //LCL = SP
-    @SP
-    D=M
-    @LCL
-    M=D
-        //goto Class1.get
+        //save function address in R13
     @Class1.get
+    D=A
+    @R13
+    M=D
+        //save args+5 in R14
+    @5
+    D=A
+    @R14
+    M=D
+        //save ret-address in D
+    @GENERATED_INTERNAL_SYMBOL$$7
+    D=A
+        //prepare the call
+    @::Internals::callSeqence
     0;JMP
-(GENERATED_INTERNAL_SYMBOL$$13)
+(GENERATED_INTERNAL_SYMBOL$$7)
 
 // call Class2.get 5
 
-        //push ret-addr
-    @GENERATED_INTERNAL_SYMBOL$$14
-    D=A
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push LCL
-    @LCL
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push ARG
-    @ARG
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push THIS
-    @THIS
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push THAT
-    @THAT
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //reposition ARG = SP - args - 5
-    @SP
-    D=M
-    @5
-    D=D-A
-    @ARG
-    M=D
-        //LCL = SP
-    @SP
-    D=M
-    @LCL
-    M=D
-        //goto Class2.get
+        //save function address in R13
     @Class2.get
+    D=A
+    @R13
+    M=D
+        //save args+5 in R14
+    @5
+    D=A
+    @R14
+    M=D
+        //save ret-address in D
+    @GENERATED_INTERNAL_SYMBOL$$8
+    D=A
+        //prepare the call
+    @::Internals::callSeqence
     0;JMP
-(GENERATED_INTERNAL_SYMBOL$$14)
+(GENERATED_INTERNAL_SYMBOL$$8)
 
 //label Sys.init$WHILE
 

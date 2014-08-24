@@ -1,21 +1,13 @@
 //function $FN$ $LCNT$
 
 ($FN$)
-
+    @$CONTINUE$
+    D=A
+    @R13
+    M=D
     @$LCNT$
     D=A
 
-($LOOP$)
-    @$END$
-    D;JEQ
-
-    @SP
-    M=M+1
-    A=M-1
-    M=0
-    D=D-1
-
-    @$LOOP$
+    @::Internals::InitFunction
     0;JMP
-
-($END$)
+($CONTINUE$)

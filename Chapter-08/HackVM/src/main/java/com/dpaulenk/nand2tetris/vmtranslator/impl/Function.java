@@ -10,14 +10,14 @@ public class Function extends Instruction {
         private final int locals;
 
         private FunctionImpl(String functionName, int locals) {
-            super("function.asm.st", "FN", "LCNT", "LOOP", "END");
+            super("function.asm.st", "FN", "LCNT", "CONTINUE");
             this.functionName = functionName;
             this.locals = locals;
         }
 
         @Override
         protected void prepareTranslate(SymbolTable table) {
-            setValues(functionName, String.valueOf(locals), table.newSymbol(), table.newSymbol());
+            setValues(functionName, String.valueOf(locals), table.newSymbol());
         }
     }
 

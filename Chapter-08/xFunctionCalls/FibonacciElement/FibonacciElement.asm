@@ -1,4 +1,4 @@
-//initialization sequence
+//initialization section
 
         //init stack
     @261 // = 256 + 5
@@ -11,6 +11,61 @@
         //ending infinite loop
 (GENERATED_INTERNAL_SYMBOL$$0)
     @GENERATED_INTERNAL_SYMBOL$$0
+    0;JMP
+
+
+(::Internals::callSeqence)
+//assumes that return address is in R13,
+//             argcount+5 is in R14 and
+//             function address is in D
+        //push ret-addr
+    @SP
+    M=M+1
+    A=M-1
+    M=D
+        //push LCL
+    @LCL
+    D=M
+    @SP
+    M=M+1
+    A=M-1
+    M=D
+        //push ARG
+    @ARG
+    D=M
+    @SP
+    M=M+1
+    A=M-1
+    M=D
+        //push THIS
+    @THIS
+    D=M
+    @SP
+    M=M+1
+    A=M-1
+    M=D
+        //push THAT
+    @THAT
+    D=M
+    @SP
+    M=M+1
+    A=M-1
+    M=D
+        //reposition ARG = SP - args - 5
+    @SP
+    D=M
+    @R14
+    D=D-M
+    @ARG
+    M=D
+        //LCL = SP
+    @SP
+    D=M
+    @LCL
+    M=D
+        //goto function, which address is in R14
+    @R13
+    A=M
     0;JMP
 
 //function Main.fibonacci 0
@@ -193,55 +248,21 @@
 
 // call Main.fibonacci 6
 
-        //push ret-addr
+        //save function address in R13
+    @Main.fibonacci
+    D=A
+    @R13
+    M=D
+        //save args+5 in R14
+    @6
+    D=A
+    @R14
+    M=D
+        //save ret-address in D
     @GENERATED_INTERNAL_SYMBOL$$5
     D=A
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push LCL
-    @LCL
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push ARG
-    @ARG
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push THIS
-    @THIS
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push THAT
-    @THAT
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //reposition ARG = SP - args - 5
-    @SP
-    D=M
-    @6
-    D=D-A
-    @ARG
-    M=D
-        //LCL = SP
-    @SP
-    D=M
-    @LCL
-    M=D
-        //goto Main.fibonacci
-    @Main.fibonacci
+        //prepare the call
+    @::Internals::callSeqence
     0;JMP
 (GENERATED_INTERNAL_SYMBOL$$5)
 
@@ -277,55 +298,21 @@
 
 // call Main.fibonacci 6
 
-        //push ret-addr
+        //save function address in R13
+    @Main.fibonacci
+    D=A
+    @R13
+    M=D
+        //save args+5 in R14
+    @6
+    D=A
+    @R14
+    M=D
+        //save ret-address in D
     @GENERATED_INTERNAL_SYMBOL$$6
     D=A
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push LCL
-    @LCL
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push ARG
-    @ARG
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push THIS
-    @THIS
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push THAT
-    @THAT
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //reposition ARG = SP - args - 5
-    @SP
-    D=M
-    @6
-    D=D-A
-    @ARG
-    M=D
-        //LCL = SP
-    @SP
-    D=M
-    @LCL
-    M=D
-        //goto Main.fibonacci
-    @Main.fibonacci
+        //prepare the call
+    @::Internals::callSeqence
     0;JMP
 (GENERATED_INTERNAL_SYMBOL$$6)
 
@@ -412,9 +399,9 @@
 
 (GENERATED_INTERNAL_SYMBOL$$8)
 
-//push const 7:
+//push const 9:
 
-    @7
+    @9
     D=A
     @SP
     M=M+1 //m[sp]++
@@ -424,55 +411,21 @@
 
 // call Main.fibonacci 6
 
-        //push ret-addr
+        //save function address in R13
+    @Main.fibonacci
+    D=A
+    @R13
+    M=D
+        //save args+5 in R14
+    @6
+    D=A
+    @R14
+    M=D
+        //save ret-address in D
     @GENERATED_INTERNAL_SYMBOL$$9
     D=A
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push LCL
-    @LCL
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push ARG
-    @ARG
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push THIS
-    @THIS
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push THAT
-    @THAT
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //reposition ARG = SP - args - 5
-    @SP
-    D=M
-    @6
-    D=D-A
-    @ARG
-    M=D
-        //LCL = SP
-    @SP
-    D=M
-    @LCL
-    M=D
-        //goto Main.fibonacci
-    @Main.fibonacci
+        //prepare the call
+    @::Internals::callSeqence
     0;JMP
 (GENERATED_INTERNAL_SYMBOL$$9)
 

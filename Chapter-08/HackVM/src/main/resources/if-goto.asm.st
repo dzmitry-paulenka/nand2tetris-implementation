@@ -6,3 +6,10 @@
     D=M
     @$LBL$
     D;JNE
+
+
+
+//@$LBL$
+//D=A
+//@::Internals::IfGoto
+//0;JMP

@@ -1,53 +1,19 @@
 // call $FN$ $ACNT5$
 
-        //push ret-addr
+        //save function address in R13
+    @$FN$
+    D=A
+    @R13
+    M=D
+        //save args+5 in R14
+    @$ACNT5$
+    D=A
+    @R14
+    M=D
+        //save ret-address in D
     @$RET$
     D=A
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push LCL
-    @LCL
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push ARG
-    @ARG
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push THIS
-    @THIS
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //push THAT
-    @THAT
-    D=M
-    @SP
-    M=M+1
-    A=M-1
-    M=D
-        //reposition ARG = SP - args - 5
-    @SP
-    D=M
-    @$ACNT5$
-    D=D-A
-    @ARG
-    M=D
-        //LCL = SP
-    @SP
-    D=M
-    @LCL
-    M=D
-        //goto $FN$
-    @$FN$
+        //prepare the call
+    @::Internals::callSeqence
     0;JMP
 ($RET$)

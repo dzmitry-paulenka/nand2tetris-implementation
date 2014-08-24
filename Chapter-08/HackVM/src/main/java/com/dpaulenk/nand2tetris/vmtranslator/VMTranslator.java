@@ -73,7 +73,7 @@ public class VMTranslator {
 
             PrintWriter out = new PrintWriter(asmFileName);
             for (Instruction i : instructions) {
-                System.out.println(i);
+//                System.out.println(i);
                 out.println(i.translate(symbolTable));
             }
             out.close();
