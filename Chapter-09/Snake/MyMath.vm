@@ -1,0 +1,29 @@
+function MyMath.init 0
+push argument 0
+pop static 0
+push constant 0
+return
+function MyMath.randIntG 0
+push static 0
+push constant 31421
+call Math.multiply 2
+push constant 6927
+add
+call Math.abs 1
+pop static 0
+push static 0
+return
+function MyMath.randInt 0
+call MyMath.randIntG 0
+push argument 0
+call MyMath.mod 2
+return
+function MyMath.mod 0
+push argument 0
+push argument 0
+push argument 1
+call Math.divide 2
+push argument 1
+call Math.multiply 2
+sub
+return

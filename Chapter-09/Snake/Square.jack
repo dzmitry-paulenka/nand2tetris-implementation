@@ -1,0 +1,78 @@
+class Square {
+    field Square mprev;
+    field Square mnext;
+
+    // Location on the screen
+    field int mx, my;
+
+    /** Constructs a new square with a given location and size. */
+    constructor Square new(int Ax, int Ay) {
+        let mprev = null;
+        let mnext = null;
+        let mx = Ax;
+        let my = Ay;
+
+        do show();
+
+        return this;
+    }
+
+    method void setPrev(Square s) {
+        let mprev = s;
+        return;
+    }
+
+    method void setNext(Square s) {
+        let mnext = s;
+        return;
+    }
+
+    method int x() {
+        return mx;
+    }
+
+    method int y() {
+        return my;
+    }
+
+    method Square next() {
+        return mnext;
+    }
+
+    method Square prev() {
+        return mprev;
+    }
+
+    method void setPosition(int ax, int ay) {
+        do hide();
+        let mx = ax;
+        let my = ay;
+        do show();
+        return;
+    }
+
+    /** Deallocates the object's memory. */
+    method void dispose() {
+        if (~(mnext = null)) {
+            do mnext.dispose();
+        }
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void paint(boolean erase) {
+        do Screen.setColor(erase);
+        do Screen.drawRectangle(mx*Main.size() + 1, my*Main.size() + 1, (mx+1)*Main.size()-1, (my+1)*Main.size()-1);
+        return;
+    }
+
+    method void hide() {
+        do paint(false);
+        return;
+    }
+
+    method void show() {
+        do paint(true);
+        return;
+    }
+}

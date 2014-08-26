@@ -1,0 +1,21 @@
+class MyMath {
+    static int seed;
+
+    function void init(int initSeed) {
+        let seed = initSeed;
+        return;
+    }
+
+    function int randIntG() {
+        let seed = Math.abs((seed * 31421) + 6927);
+        return seed;
+    }
+
+    function int randInt(int n) {
+        return MyMath.mod(MyMath.randIntG(), n);
+    }
+
+    function int mod(int n, int m) {
+        return n - (n/m*m);
+    }
+}

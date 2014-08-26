@@ -1,0 +1,121 @@
+
+
+class Snake {
+
+    field Square head;
+    field Square tail;
+
+    field int direction;
+
+    constructor Snake new() {
+        let head = Square.new(MyMath.randInt(Main.maxx()), MyMath.randInt(Main.maxy()));
+        let tail = head;
+
+        let direction = MyMath.randInt(Main.maxx());
+
+        do show();
+
+        return this;
+    }
+
+    method boolean has(Square s) {
+        return hasFrom(head, s.x(), s.y());
+    }
+
+    method boolean hasFrom(Square head, int x, int y) {
+        while (~(head = null)) {
+            if ((head.x() = x) & (head.y() = y)) {
+                return true;
+            }
+            let head = head.next();
+        }
+        return false;
+    }
+
+    method int move(Square s) {
+        var int nx, ny;
+        var Square ss;
+
+        let nx = head.x();
+        let ny = head.y();
+
+        if (direction = 0) {
+            let ny = ny - 1;
+        }
+        if (direction = 1) {
+            let ny =ny + 1;
+        }
+        if (direction = 2) {
+            let nx = nx - 1;
+        }
+        if (direction = 3) {
+            let nx = nx + 1;
+        }
+        if ((nx<0) | (ny < 0) | (nx > (Main.maxx() - 1)) | (ny > (Main.maxy() - 1))) {
+            return -1;
+        }
+
+        if ((s.x() = nx) & (s.y() = ny)) {
+            do head.setPrev(s);
+            do s.setNext(head);
+            
+            let head = s;
+            
+            do s.show();
+            //eaten
+            return 1;
+        }
+
+        if (head = tail) {
+            do head.setPosition(nx, ny);
+            return 2;
+        }
+
+        let ss = head.next();
+
+        if (~(hasFrom(ss, nx, ny))) {
+            //no collision
+            let ss = tail.prev();
+
+            do ss.setNext(null);
+            do tail.setNext(head);
+            do tail.setPrev(null);
+            do head.setPrev(tail);
+            do tail.setPosition(nx, ny);
+
+            let head = tail;
+            let tail = ss;
+
+            return 2;
+        }
+
+        //collision
+        return -1;
+    }
+
+    method void setDirection(int dir) {
+        let direction = dir;
+        return;
+    }
+
+    method void dispose() {
+        do head.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void paint(boolean show) {
+//        do head.paint(show);
+        return;
+    }
+
+    method void show() {
+        do paint(true);
+        return;
+    }
+
+    method void hide() {
+        do paint(false);
+        return;
+    }
+}

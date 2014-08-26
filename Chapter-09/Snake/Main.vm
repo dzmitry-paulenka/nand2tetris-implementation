@@ -1,0 +1,27 @@
+function Main.size 0
+push constant 30
+return
+function Main.maxx 0
+push constant 512
+call Main.size 0
+call Math.divide 2
+return
+function Main.maxy 0
+push constant 256
+call Main.size 0
+call Math.divide 2
+return
+function Main.main 1
+push constant 2
+call MyMath.init 1
+pop temp 0
+call SnakeGame.new 0
+pop local 0
+push local 0
+call SnakeGame.run 1
+pop temp 0
+push local 0
+call SnakeGame.dispose 1
+pop temp 0
+push constant 0
+return

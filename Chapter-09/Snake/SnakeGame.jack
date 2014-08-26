@@ -1,0 +1,106 @@
+/**
+ * The arrow keys are used to move.
+ * The 'q' key is used to quit the game.
+ */
+class SnakeGame {
+
+
+    field Square square;
+
+    field Snake snake;
+
+    field int direction; // 0=up,1=down,2=left,3=right
+
+    /** Constructs a new Square Game. */
+    constructor SnakeGame new() {
+
+        let snake = Snake.new();
+        do createNewSquare();
+
+        let direction = 3;
+
+        return this;
+    }
+
+    /** Deallocates the object's memory. */
+    method void dispose() {
+        do square.dispose();
+        do snake.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Starts the game. Handles inputs from the user that control
+     *  the square's movement, direction and size. */
+    method void run() {
+        var char key;
+        var boolean exit;
+        var int ticks, mv;
+
+        let exit = false;
+        let ticks = 0;
+
+        while (~exit) {
+            do MyMath.randIntG();
+
+            do Sys.wait(10);
+            let ticks = ticks + 1;
+            let key = Keyboard.keyPressed();
+
+            if (ticks = 20) {
+                let mv = snake.move(square);
+                if (mv < 0) {
+                    let exit = true;
+                }
+                if (mv = 1) {
+                    do createNewSquare();
+                }
+                let ticks = 0;
+            }
+
+            if (key = 81) {
+                let exit = true;
+            }
+            if (key = 131) {
+                let direction = 0;
+            }
+            if (key = 133) {
+                let direction = 1;
+            }
+            if (key = 130) {
+                let direction = 2;
+            }
+            if (key = 132) {
+                let direction = 3;
+            }
+            do snake.setDirection(direction);
+        }
+            
+        return;
+	}
+
+    method void createNewSquare() {
+        let square = Square.new(MyMath.randInt(Main.maxx()), MyMath.randInt(Main.maxy()));
+        while (snake.has(square)) {
+            let square = Square.new(MyMath.randInt(Main.maxx()), MyMath.randInt(Main.maxy()));
+        }
+        do Screen.setColor(false);
+        do Screen.drawRectangle(square.x()*Main.size() + 5, square.y()*Main.size() + 5,
+                                (square.x()+1)*Main.size()-5, (square.y()+1)*Main.size()-5);
+
+        return;
+    }
+
+    /** Moves the square by 2 pixels in the current direction. */
+    method void moveSquare() {
+        var int nx, ny;
+
+        let nx = MyMath.randInt(Main.maxx());
+        let ny = MyMath.randInt(Main.maxy());
+
+        do square.setPosition(nx, ny);
+
+        do Sys.wait(100); // Delays the next movement.
+        return;
+    }
+}

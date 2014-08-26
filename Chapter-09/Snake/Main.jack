@@ -1,0 +1,18 @@
+class Main {
+    function int size() { return 30; }
+    function int maxx() { return 512 / Main.size(); }
+    function int maxy() { return 256 / Main.size(); }
+
+    /** Initializes a new game and starts it. */    
+    function void main() {
+        var SnakeGame game;
+
+        do MyMath.init(2);
+
+        let game = SnakeGame.new();
+        do game.run();
+    	do game.dispose();
+
+        return;
+    }
+}
