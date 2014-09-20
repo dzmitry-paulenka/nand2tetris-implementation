@@ -1,0 +1,21 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/11/ComplexArrays/Main.jack
+
+/**
+ * Performs several complex Array tests.
+ * For each test, the required result is printed along with the
+ * actual result. In each test, the two results should be equal.
+ */
+class TestWhile {
+    function void main() {
+        var int a;
+
+        let a = 1;
+        while (a = 1) {
+            let a = 2;
+        }
+        return;
+    }
+}
