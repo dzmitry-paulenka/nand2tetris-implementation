@@ -1,0 +1,132 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Math.jack
+
+/**
+ * A basic math library.
+ */
+class Math {
+    static Array twos;
+
+    /** Initializes the library. */
+    function void init() {
+        var int i, p2;
+
+        let twos = Array.new(16);
+        let i = 0;
+        let p2 = 1;
+
+        while (i < 16) {
+            let twos[i] = p2;
+            let p2 = p2 + p2;
+            let i = i + 1;
+        }
+        return;
+    }
+
+    /** Returns the absolute value of x. */
+    function int abs(int x) {
+        if (x < 0) {
+            return -x;
+        } else {
+            return x;
+        }
+    }
+
+    /** Returns the product of x and y. */
+    function int multiply(int x, int y) {
+        var int i, sum, shifted;
+
+        let i = 0;
+        let sum = 0;
+        let shifted = x;
+        while (i < 16) {
+            if (Math.isBitSet(y, i)) {
+                let sum = sum + shifted;
+            }
+            let shifted = shifted + shifted;
+            let i = i + 1;
+        }
+
+        return sum;
+    }
+
+    function boolean isBitSet(int x, int ind) {
+        return x & twos[ind];
+    }
+
+    /** Returns the integer part of x/y. */
+    function int divide(int x, int y) {
+        var boolean negate;
+        var int res, q;
+
+        if (y = -32767) {
+            return 0;
+        }
+
+        if ((y < 0 & x > 0) | (y > 0 & x < 0)) {
+            let negate = true;
+        }
+
+        let x = Math.abs(x);
+        let y = Math.abs(y);
+
+        if (y > x) {
+            return 0;
+        }
+
+        if (y > 16383) {
+            let q = 0;
+        } else {
+            let q = Math.divide(x, 2 * y) * 2;
+        }
+
+        if ((x - (q * y)) < y) {
+            let res = q;
+        } else {
+            let res = q + 1;
+        }
+
+        if (negate) {
+            let res = -res;
+        }
+
+        return res;
+    }
+
+    /** Returns the integer part of the square root of x. */
+    function int sqrt(int x) {
+        var int i, y, t;
+
+        let y = 0;
+        let i = 7;
+        while (i > -1) {
+            let t = y + twos[i];
+            let t = t * t;
+            if (((t < x) | (t = x)) & (t > 0)) {
+                let y = y + twos[i];
+            }
+            let i = i - 1;
+        }
+        return y;
+    }
+
+    /** Returns the greater number. */
+    function int max(int a, int b) {
+        if (a > b) {
+            return a;
+        } else {
+            return b;
+        }
+    }
+
+    /** Returns the smaller number. */
+    function int min(int a, int b) {
+        if (a < b) {
+            return a;
+        } else {
+            return b;
+        }
+    }
+}

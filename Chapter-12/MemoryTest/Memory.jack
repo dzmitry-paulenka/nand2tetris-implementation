@@ -1,0 +1,104 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Memory.jack
+
+/**
+ * Memory operations library.
+ */ 
+class Memory {
+    static Array mem;
+    
+    static int heapStart;
+    static int heapEnd;
+    static int minSegSize;
+
+    static int firstFree;
+
+    /** Initializes mem parameters. */
+    function void init() {
+        let mem = 0;
+        let heapStart = 2048;
+        let heapEnd = 16383;
+        let minSegSize = 10;
+
+        let firstFree = heapStart;
+        let mem[firstFree] = heapEnd - heapStart + 1;
+        let mem[firstFree + 1] = -1;
+
+        return;
+    }
+
+    /** Returns the value of the main mem at the given address. */
+    function int peek(int address) {
+        return mem[address];
+    }
+
+    /** Sets the value of the main mem at this address
+     *  to the given value. */
+    function void poke(int address, int value) {
+        let mem[address] = value;
+        return;
+    }
+
+    /** finds and allocates from the heap a mem block of the 
+     *  specified size and returns a reference to its base address. */
+    function int alloc(int size) {
+        var int prev, curr, next, currSize;
+
+        let size = size + 1; // + header size
+        
+        let prev = -1;
+        let curr = firstFree;
+
+        while ((mem[curr] < size) & (~(curr < 0))) {
+            let prev = curr;
+            let curr = mem[curr + 1];
+        }
+        if (curr < 0) {
+            do Sys.error(100);
+            return -1;
+        }
+
+        let currSize = mem[curr];
+        let next = mem[curr + 1];
+
+        if (currSize - size < minSegSize) {
+            let size = currSize;
+            //give whole segment
+            if (prev = -1) {
+                let firstFree = next;
+            } else {
+                let mem[prev + 1] = next;
+            }
+        } else {
+            if (prev = -1) {
+                let firstFree = curr + size;
+            } else {
+                let mem[prev + 1] = curr + size;
+            }
+
+            let mem[curr + size] = currSize - size;
+            let mem[curr + size + 1] = next;
+        }
+
+        let mem[curr] = size;
+
+        return curr + 1;
+    }
+
+    /** De-allocates the given object and frees its space. */
+    function void deAlloc(int object) {
+        var int size, curr;
+
+        let curr = object - 1;
+
+        let size = mem[curr];
+        let mem[curr] = size;
+        let mem[curr + 1] = firstFree;
+
+        let firstFree = curr;
+
+        return;
+    }    
+}

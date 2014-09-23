@@ -1,0 +1,191 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Screen.jack
+
+/**
+ * Graphic screen library.
+ */
+class Screen {
+    static boolean color;
+    static Array twos;
+
+    /** Initializes the Screen. */
+    function void init() {
+        var int i, p2;
+
+        let color = true;
+
+        let twos = Array.new(16);
+        let i = 0;
+        let p2 = 1;
+
+        while (i < 16) {
+            let twos[i] = p2;
+            let p2 = p2 + p2;
+            let i = i + 1;
+        }
+
+        return;
+    }
+
+    /** Erases the whole screen. */
+    function void clearScreen() {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(0, 0, 511, 255);
+        return;
+    }
+
+    /** Sets the color to be used in further draw commands
+     *  where white = false, black = true. */
+    function void setColor(boolean b) {
+        let color = b;
+        return;
+    }
+
+    /** Draws the (x, y) pixel. */
+    function void drawPixel(int x, int y) {
+        var int ind, curr, mask;
+        var boolean has;
+
+        //32 16-bit words for every row, starts on 16384
+        //c%16 bit (counting from LSB to MSB) of the word at Screen[r*32 + c/16]
+
+        let ind = 16384 + (y*32 + (x/16));
+
+        let curr = Memory.peek(ind);
+
+        let mask = twos[x - (x/16*16)];
+        let has = ~((curr & mask) = 0);
+
+        if (has & (~color)) {
+            let curr = curr - mask;
+        }
+
+        if ((~has) & color) {
+            let curr = curr + mask;
+        }
+
+        do Memory.poke(ind, curr);
+
+        return;
+    }
+
+    function void horzLine(int x1, int x2, int y) {
+        var int x;
+
+        let x = Math.min(x1, x2);
+        let x2 = Math.max(x1, x2);
+        while ((x < x2) | (x = x2)) {
+            do Screen.drawPixel(x, y);
+            let x = x + 1;
+        }
+        return;
+    }
+
+    function void vertLine(int x, int y1, int y2) {
+        var int y;
+        
+        let y = Math.min(y1, y2);
+        let y2 = Math.max(y1, y2);
+        while ((y < y2) | (y = y2)) {
+            do Screen.drawPixel(x, y);
+            let y = y + 1;
+        }
+        return;
+    }
+
+    function void drawLine(int x1, int y1, int x2, int y2) {
+        var int dx, dy, a, b, axy, sy;
+
+        if (x1 = x2) {
+            do Screen.vertLine(x1, y1, y2);
+            return;
+        }
+
+        if (y1 = y2) {
+            do Screen.horzLine(x1, x2, y1);
+            return;
+        }
+
+        if (x1 > x2) {
+            let a = x1; let x1 = x2; let x2 = a;
+            let a = y1; let y1 = y2; let y2 = a;
+        }
+
+        let dx = x2 - x1;
+        let dy = y2 - y1;
+        let sy = 1;
+        if (dy < 0) {
+            let sy = -1;
+            let dy = -dy;
+        }
+
+        let a = 0;
+        let b = 0;
+
+        while (((a < dx) | (a = dx)) & ((b < dy) | (b = dy))) {
+            do Screen.drawPixel(x1 + a, y1 + (b*sy));
+            if (axy < 0) {
+                let a = a + 1;
+                let axy = axy + dy;
+            } else {
+                let b = b + 1;
+                let axy = axy - dx;
+            }
+        }
+        return;
+    }
+
+    /** Draws a filled rectangle where the top left corner
+     *  is (x1, y1) and the bottom right corner is (x2, y2). */
+    function void drawRectangle(int x1, int y1, int x2, int y2) {
+        var int x;
+
+        let x = Math.min(x1, x2);
+        let x2 = Math.max(x1, x2);
+
+        while ((x < x2) | (x = x2)) {
+            do Screen.drawLine(x, y1, x, y2);
+            let x = x + 1;
+        }
+
+        return;
+    }
+
+    /** Draws a filled circle of radius r around (cx, cy). */
+    function void drawCircle(int cx, int cy, int r) {
+        var int x, y, r2;
+
+        let r2 = r*r;
+
+        // do Screen.pr(cx, cy, r);
+        // do Output.println();
+
+        let x = 0;
+        while (x < (r+1)) {
+            let y = Math.sqrt(r2 - (x*x));
+
+            do Screen.vertLine(cx + x, cy - y, cy + y);
+            do Screen.vertLine(cx - x, cy - y, cy + y);
+
+            // do Screen.pr(cx + x, cy - y, cy + y);
+            // do Screen.pr(cx - x, cy - y, cy + y);
+
+            let x = x + 1;
+        }
+        return;
+    }
+
+    function void pr(int a, int b, int c) {
+        do Output.printInt(a);
+        do Output.printString(" ");
+        do Output.printInt(b);
+        do Output.printString(" ");
+        do Output.printInt(c);
+        do Output.println();
+
+        return;
+    }
+
+}
