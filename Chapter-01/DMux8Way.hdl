@@ -3,29 +3,15 @@ CHIP DMux8Way {
     OUT a, b, c, d, e, f, g, h;
 
     PARTS:
-    DMux(in=in, sel=sel[0], a=aceg, b=bdfh);
-    DMux(in=in, sel=sel[1], a=abef, b=cdgh);
-    DMux(in=in, sel=sel[2], a=abcd, b=efgh);
+    DMux4Way(in = in, sel = sel[0..1], a = ae, b = bf, c = cg, d = dh);
+    DMux(in = in, sel = sel[2], a = abcd, b = efgh);
 
-    And3(a=abcd, b=aceg, c=abef, out=a);
-    And3(a=abcd, b=bdfh, c=abef, out=b);
-    And3(a=abcd, b=aceg, c=cdgh, out=c);
-    And3(a=abcd, b=bdfh, c=cdgh, out=d);
-    And3(a=aceg, b=abef, c=efgh, out=e);
-    And3(a=bdfh, b=abef, c=efgh, out=f);
-    And3(a=aceg, b=cdgh, c=efgh, out=g);
-    And3(a=bdfh, b=cdgh, c=efgh, out=h);
-
-//    Not(in=sel[0], out=ns0);
-//    Not(in=sel[1], out=ns1);
-//    Not(in=sel[2], out=ns2);
-//
-//    And4(a=in, b=ns2, c=ns1, d=ns0, out=a);
-//    And4(a=in, b=ns2, c=ns1, d=sel[0], out=b);
-//    And4(a=in, b=ns2, c=sel[1], d=ns0, out=c);
-//    And4(a=in, b=ns2, c=sel[1], d=sel[0], out=d);
-//    And4(a=in, b=sel[2], c=ns1, d=ns0, out=e);
-//    And4(a=in, b=sel[2], c=ns1, d=sel[0], out=f);
-//    And4(a=in, b=sel[2], c=sel[1], d=ns0, out=g);
-//    And4(a=in, b=sel[2], c=sel[1], d=sel[0], out=h);
+    And(a = ae, b = abcd, out = a);
+    And(a = bf, b = abcd, out = b);
+    And(a = cg, b = abcd, out = c);
+    And(a = dh, b = abcd, out = d);
+    And(a = ae, b = efgh, out = e);
+    And(a = bf, b = efgh, out = f);
+    And(a = cg, b = efgh, out = g);
+    And(a = dh, b = efgh, out = h);
 }
